@@ -65,20 +65,20 @@ void TestListFunction() {
 
 	/// тест двусвязного списка
 
-	//TestList list;
-	//for (int i = 0; i < ELEMENTS_COUNT; ++i) {
-	//	TestStruct ts;
-	//	generate(&ts);
-	//	list.pushBack(ts);
-	//}
-	//
-	//_ASSERT(list.getSize() == ELEMENTS_COUNT);
-	//
-	//for (TestList::CIterator it = list.begin(); it.isValid(); ++it) {
-	//	it.getLeaf();
-	//	TestStruct ts = *it;
-	//	list.erase(it);
-	//}
+	TestList list;
+	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
+		TestStruct ts;
+		generate(&ts);
+		list.pushBack(ts);
+	}
+	
+	_ASSERT(list.getSize() == ELEMENTS_COUNT);
+	
+	for (TestList::CIterator it = list.begin(); it.isValid(); ++it) {
+		it.getLeaf();
+		TestStruct ts = *it;
+		list.erase(it);
+	}
 }
 
 int main() {

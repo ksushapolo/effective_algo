@@ -268,12 +268,11 @@ namespace lab618 {
 
 			// применяется в erase и eraseAndNext
 			void setLeafPreBegin(leaf* p) {
-				//не особо понять смысл
+
 			}
 
 			// применяется в erase и eraseAndNext
 			void setLeafPostEnd(leaf* p) {
-				//аналогично
 			}
 
 			bool isValid() {
@@ -313,8 +312,17 @@ namespace lab618 {
 		}
 
 		T popBack() {
-			T tmp;
-			return tmp;
+			if (getSize() > 0) {
+				T value = m_pEnd->pprev->data;
+				leaf* temp = m_pEnd;
+				m_pEnd = m_pEnd->pprev;
+				m_pEnd->pnext = nullptr;
+				delete temp;
+				return value;
+			}
+			else {
+				throw "List is empty!";
+			}
 		}
 
 		void pushFront(T& data) {
@@ -350,6 +358,7 @@ namespace lab618 {
 				return;
 			}
 			if (it.getLeaf() == m_pBegin) {
+				it.setLeafPreBegin(it.getLeaf());
 				popFront();
 			} else {
 				leaf* curr = it.getLeaf();
@@ -358,6 +367,7 @@ namespace lab618 {
 				while (temp->pnext != curr) {
 					temp = temp->pnext;
 				}
+				it.setLeafPreBegin(m_pBegin);
 				temp->pnext = curr->pnext;
 				curr->pnext->pprev = temp;
 				delete curr;
