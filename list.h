@@ -9,32 +9,20 @@ namespace lab618 {
 	private:
 		struct leaf {
 			T data;
-			leaf* pnext;
+			leaf* pnext = nullptr;
 
 			leaf() = default;
 
-			leaf(T& _data, leaf* _pnext) {
-				data = _data;
-				pnext = _pnext;
-			}
+			leaf(T& _data, leaf* _pnext) : data(_data), pnext(_pnext) {}
 		};
 	public:
 		class CIterator {
 		public:
-			CIterator() {
-				m_pBegin = nullptr;
-				m_pCurrent = nullptr;
-			}
+			CIterator() : m_pBegin(nullptr), m_pCurrent(nullptr) {}
 
-			CIterator(leaf* p) {
-				m_pBegin = nullptr;
-				m_pCurrent = p;
-			}
+			CIterator(leaf* p) : m_pBegin(nullptr), m_pCurrent(p) {}
 
-			CIterator(const CIterator &src) {
-				m_pBegin = src.m_pBegin;
-				m_pCurrent = src.m_pCurrent;
-			}
+			CIterator(const CIterator &src) : m_pBegin(src.m_pBegin), m_pCurrent(src.m_pCurrent) {}
 
 			~CIterator() {}
 
@@ -48,13 +36,14 @@ namespace lab618 {
 			}
 
 			bool operator != (const CIterator&  it) const {
-				return (it.m_pBegin != m_pBegin) || (it.m_pCurrent != m_pCurrent);
+				return (it.m_pCurrent != m_pCurrent) || (it.m_pBegin != m_pBegin);
 			}
 
 			void operator++() {
 				if (m_pCurrent != m_pBegin) {
 					m_pCurrent = m_pCurrent->pnext;
-				} else {
+				}
+				else {
 					m_pBegin = nullptr;
 				}
 			}
@@ -134,6 +123,7 @@ namespace lab618 {
 				leaf* temp = m_pBegin;
 				m_pBegin = m_pBegin->pnext;
 				delete temp;
+				temp = nullptr;
 				return value;
 			} else {
 				throw "List is empty!";
@@ -156,6 +146,7 @@ namespace lab618 {
 				}
 				it.setLeafPreBegin(m_pBegin);
 				delete temp;
+				temp = nullptr;
 			} else {
 				leaf* temp = new leaf();
 				temp = m_pBegin;
@@ -168,11 +159,12 @@ namespace lab618 {
 				}
 				temp->pnext = curr->pnext;
 				delete curr;
+				curr = nullptr;
 			}
 		}
 
 		int getSize() {
-			int size = 0;
+			size_t size = 0;
 			for (CIterator it = begin(); it.isValid(); ++it) {
 				++size;
 			}
@@ -180,14 +172,14 @@ namespace lab618 {
 		}
 
 		void clear() {
-			if (nullptr == m_pBegin) {
-				return;
-			}
-			while (nullptr != m_pBegin) {
-				popFront();
-			}
+			leaf* curr = m_pBegin;
 			m_pBegin = nullptr;
 			m_pEnd = nullptr;
+			while (curr != nullptr) {
+				leaf* next = curr->pnext;
+				delete curr;
+				curr = next;
+			}
 		}
 
 		CIterator begin() {
@@ -205,33 +197,19 @@ namespace lab618 {
 		struct leaf {
 			T data;
 			leaf * pnext, *pprev;
+
 			leaf() = default;
-			leaf(T& _data, leaf * _pprev, leaf * _pnext) {
-				data = _data;
-				pprev = _pprev;
-				pnext = _pnext;
-			}
+			
+			leaf(T& _data, leaf * _pprev, leaf * _pnext) : data(_data), pprev(_pprev), pnext(_pnext) {}
 		};
 	public:
 		class CIterator {
 		public:
-			CIterator() {
-				m_pBegin = nullptr;
-				m_pCurrent = nullptr;
-				m_pEnd = nullptr;
-			}
+			CIterator() = default;
 
-			CIterator(leaf *p) {
-				m_pBegin = nullptr;
-				m_pEnd = nullptr;
-				m_pCurrent = p;
-			}
+			CIterator(leaf *p) : m_pBegin(nullptr),	m_pEnd(nullptr), m_pCurrent(p) {}
 
-			CIterator(const CIterator &src) {
-				m_pBegin = src.m_pBegin;
-				m_pCurrent = src.m_pCurrent;
-				m_pEnd = src.m_pEnd;
-			}
+			CIterator(const CIterator &src) : m_pBegin(src.m_pBegin), m_pCurrent(src.m_pCurrent), m_pEnd(src.m_pEnd) {}
 
 			~CIterator() {}
 
@@ -246,19 +224,20 @@ namespace lab618 {
 			}
 
 			bool operator != (const CIterator&  it) const {
-				return !(it.m_pBegin == m_pBegin && it.m_pEnd == m_pEnd && it.m_pCurrent == m_pCurrent);
+				return !(it.m_pCurrent == m_pCurrent && it.m_pEnd == m_pEnd && it.m_pBegin == m_pBegin);
 			}
 
 			void operator++() {
 				if (m_pBegin == m_pCurrent) {
 					m_pBegin = nullptr;
-				} else {
+				}
+				else {
 					m_pCurrent = m_pCurrent->pnext;
 				}
 			}
 
 			void operator--() {
-				if (m_pEnd == m_pCurrent) {
+				if (m_pEnd != nullptr) {
 					m_pEnd = nullptr;
 				}
 				else {
@@ -349,6 +328,7 @@ namespace lab618 {
 					m_pEnd = m_pEnd->pprev;
 					m_pEnd->pnext = nullptr;
 					delete temp;
+					temp = nullptr;
 				} else {
 					delete m_pEnd;
 					m_pBegin = nullptr;
@@ -380,6 +360,7 @@ namespace lab618 {
 					m_pBegin = m_pBegin->pnext;
 					m_pBegin->pprev = nullptr;
 					delete temp;
+					temp = nullptr;
 				}
 				else {
 					delete m_pBegin;
@@ -410,6 +391,7 @@ namespace lab618 {
 				}
 				it.setLeafPreBegin(m_pBegin);
 				delete temp;
+				temp = nullptr;
 			} else {
 				--it;
 				leaf* temp = it.getLeaf();
@@ -422,6 +404,7 @@ namespace lab618 {
 					curr_next->pprev = temp;
 				}
 				delete curr;
+				curr = nullptr;
 			}
 		}
 
@@ -442,6 +425,7 @@ namespace lab618 {
 				}
 				it.setLeafPostEnd(m_pEnd);
 				delete temp;
+				temp = nullptr;
 			} else {
 				++it;
 				leaf* temp = it.getLeaf();
@@ -455,6 +439,7 @@ namespace lab618 {
 					curr_prev->pnext = temp;
 				}
 				delete curr;
+				curr = nullptr;
 			}
 		}
 
