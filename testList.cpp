@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 
 #include "list.h"
 #include <string>
@@ -23,12 +23,16 @@ struct TestStruct {
 typedef lab618::CSingleLinkedList<TestStruct> TestSingleList;
 typedef lab618::CDualLinkedList<TestStruct> TestList;
 
-static std::string makeRandomString(int minL = 7, int maxL = 14) {
+static std::string makeRandomString(int minL = 1, int maxL = 10) {
+	const char alphabet[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzпїЅпїЅпїЅпїЅпїЅЕЁпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ";
+	const int alphabet_length = sizeof(alphabet);
 	int length = rand() % maxL + minL;
 	std::string s;
 	s.reserve(length);
-	// сделать случайную строку
-	s += "tmp";
+	for (int i = 0; i < length; ++i) {
+		char temp = alphabet[rand() % (alphabet_length)];
+		s += temp;
+	}
 	return s;
 }
 
@@ -39,7 +43,7 @@ static void generate(TestStruct *pts) {
 }
 
 void TestListFunction() {
-	// тест односвязного списка
+	// С‚РµСЃС‚ РѕРґРЅРѕСЃРІСЏР·РЅРѕРіРѕ СЃРїРёСЃРєР°
 
 	TestSingleList single_list;
 	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
@@ -63,7 +67,7 @@ void TestListFunction() {
 	
 	_ASSERT(single_list.getSize() == 0);
 
-	/// тест двусвязного списка
+	/// С‚РµСЃС‚ РґРІСѓСЃРІСЏР·РЅРѕРіРѕ СЃРїРёСЃРєР°
 
 	TestList list;
 	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
