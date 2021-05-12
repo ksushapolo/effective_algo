@@ -68,18 +68,17 @@ static void generate(TestStruct *pts) {
 
 void TestHashFunction() {
 	const int BLOCK_SIZE = 10;
+	TestStruct* my_array = new TestStruct[ELEMENTS_COUNT];
 	CHash hash(BLOCK_SIZE, true);
-	std::vector<TestStruct> vec;
-	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
-		TestStruct ts;
-		generate(&ts);
-		hash.add(&ts);
-		vec.push_back(ts);
-	}
 
 	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
-		hash.remove(vec[i]);
+		generate(&my_array[i]);
+		hash.add(&my_array[i]);
 	}
+
+	hash.update(&my_array[0]);
+
+	delete[] my_array;
 }
 
 int main() {

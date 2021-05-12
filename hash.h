@@ -11,7 +11,6 @@ namespace lab618
 	тип - T;
 	функция вычисления хеша - unsigned int HashFunc(const T* pElement);
 	функция сравнения - int Compare(const T *pElement, const T* pElement2).
-
 	 Класс реализует алгоритм контейнера Хеш-таблица (ассоциативный массив). Данный алгоритм базируется на идее формирования линейной адресации
 	произвольных элементов в зависимости от специально вычисляемого целого значения, уникального для каждого элемента (хеш).
 	 Формирование линейной адресации позволяет получать и сохранять элементы в контейнер за время не зависящее от числа элементов в контейнере — O(1).
@@ -31,7 +30,6 @@ namespace lab618
 	  1. Сложность подбора хорошей хеш функции (функции дающей наименьшее число коллизий);
 	  2. Отсутствие упорядоченности элементов;
 	  3. Вычислительная сложность хеш функции может добавить большую константу в вычислительную сложность алгоритма.
-
 	Данный класс реализует алгоритм Хеш-таблицы со списками
 	Данный класс не хранит данные — хранит, только указатели на них.
 	Хранение данных производится вне рамок данного класса!
@@ -100,8 +98,9 @@ namespace lab618
 		*/
 		bool update(T* pElement) {
 			unsigned int idx = 0;
-			if (findLeaf(pElement, idx) != nullptr) {
-				m_pTable[idx] = pElement;
+			leaf* curr = findLeaf(pElement, idx);
+			if (curr != nullptr) {
+				curr->pData = pElement;
 				return true;
 			}
 			return !add(pElement);
@@ -126,8 +125,7 @@ namespace lab618
 			if (nullptr == findLeaf(&element, idx)) {
 				return false;
 			}
-			int hash_value = HashFunc(&element);
-			idx = hash_value % m_tableSize;
+			idx = HashFunc(&element) % m_tableSize;
 			leaf* curr_leaf = m_pTable[idx];
 			leaf* prev_leaf = nullptr;
 			while (curr_leaf != nullptr) {
@@ -159,7 +157,6 @@ namespace lab618
 		}
 	private:
 		/**
-
 		Элементарная функция поиска узла в Хеш-таблицу. Возвращает найденный узел и в переменную idx выставляет актуальный индекс хеш-таблицы.
 		Данную функцию следует использовать в функциях add, update, find.
 		Алгоритм функции:
