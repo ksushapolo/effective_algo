@@ -69,7 +69,7 @@ static void generate(TestStruct *pts) {
 void TestHashFunction() {
 	const int BLOCK_SIZE = 10;
 	TestStruct* my_array = new TestStruct[ELEMENTS_COUNT];
-	CHash hash(BLOCK_SIZE, true);
+	CHash hash(47, BLOCK_SIZE);
 
 	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
 		generate(&my_array[i]);
@@ -77,6 +77,10 @@ void TestHashFunction() {
 	}
 
 	hash.update(&my_array[0]);
+
+	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
+		hash.remove(my_array[i]);
+	}
 
 	delete[] my_array;
 }

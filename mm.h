@@ -33,7 +33,7 @@ namespace lab618 {
 
 		CMemoryManager() = default;
 
-		CMemoryManager(int _default_block_size, bool isDeleteElementsOnDestruct = false) : 
+		CMemoryManager(int _default_block_size, bool isDeleteElementsOnDestruct = false) :
 			m_isDeleteElementsOnDestruct(isDeleteElementsOnDestruct),
 			m_blkSize(_default_block_size),
 			m_pBlocks(nullptr),
@@ -60,20 +60,21 @@ namespace lab618 {
 						curr = curr->pnext;
 					}
 				}
-				if (curr) {
+				if (nullptr != curr) {
 					m_pCurrentBlk = curr;
 				}
 				else {
 					block* empty_block = newBlock();
-					m_pCurrentBlk->pnext = empty_block;
-					m_pCurrentBlk = m_pCurrentBlk->pnext;
+					empty_block->pnext = m_pBlocks;
+					m_pCurrentBlk = empty_block;
+					m_pBlocks = empty_block;
 				}
 			}
 			T* free_pos = m_pCurrentBlk->pdata + m_pCurrentBlk->firstFreeIndex;
 			m_pCurrentBlk->firstFreeIndex = *(reinterpret_cast<int*>(free_pos));
 			m_pCurrentBlk->usedCount = m_pCurrentBlk->usedCount + 1;
-			new(free_pos) T;
-			return free_pos;
+			T* new_obj = new(free_pos) T;
+			return new_obj;
 
 		}
 
@@ -84,7 +85,7 @@ namespace lab618 {
 			}
 			block* curr = m_pBlocks;
 			while (curr != nullptr) {
-				if (curr->pdata <= p && p <= curr->pdata + m_blkSize - 1) {
+				if (curr->pdata <= p && p < curr->pdata + m_blkSize) {
 					break;
 				}
 				curr = curr->pnext;
@@ -96,9 +97,9 @@ namespace lab618 {
 
 			int pos = p - curr->pdata;
 			p->~T();
+			new(reinterpret_cast<int*>(p)) int(curr->firstFreeIndex);
 			curr->firstFreeIndex = pos;
 			curr->usedCount = curr->usedCount - 1;
-			new(reinterpret_cast<int*>(p)) int(curr->firstFreeIndex);
 			return true;
 		}
 
@@ -108,9 +109,8 @@ namespace lab618 {
 				return;
 			}
 			block* curr = m_pBlocks;
+
 			if (m_isDeleteElementsOnDestruct) {
-				m_pBlocks = nullptr;
-				m_pCurrentBlk = nullptr;
 
 				bool* is_taken = new bool[m_blkSize];
 
@@ -121,12 +121,14 @@ namespace lab618 {
 				}
 
 				delete[] is_taken;
+				m_pBlocks = nullptr;
+				m_pCurrentBlk = nullptr;
 				return;
 			}
 			if (!allBlocksAreEmpty()) {
 				throw CException();
 			}
-			
+
 			while (curr != nullptr) {
 				block* next = curr->pnext;
 				T* data_array = curr->pdata;
@@ -135,7 +137,10 @@ namespace lab618 {
 				delete curr;
 				curr = next;
 			}
+			m_pBlocks = nullptr;
+			m_pCurrentBlk = nullptr;
 		}
+
 	private:
 
 		bool allBlocksAreEmpty() {
@@ -174,31 +179,23 @@ namespace lab618 {
 
 		// Освободить память блока данных. Применяется в clear
 		void deleteBlock(block *p, bool *is_taken) {
-			if (!m_isDeleteElementsOnDestruct) {
-				T* data_array = p->pdata;
-				char* char_array = reinterpret_cast<char*>(data_array);
-				delete[] char_array;
-				delete p;
-				return;
-			}
-
 			for (int i = 0; i < m_blkSize; ++i) {
-				is_taken[i] = true;
-			}
-
-			T* data_array = p->pdata;
-			int free_ind = p->firstFreeIndex;
-			while (free_ind != -1) {
-				is_taken[free_ind] = false;
-				free_ind = *(reinterpret_cast<int*>(data_array + free_ind));
-			}
-
-			for (int i = 0; i < m_blkSize; ++i) {
-				if (is_taken[i]) {
-					(data_array + i)->~T();
+					is_taken[i] = true;
 				}
-			}
-			char* char_array = reinterpret_cast<char*>(data_array);
+
+				int free_ind = p->firstFreeIndex;
+				while (free_ind != -1) {
+					is_taken[free_ind] = false;
+					free_ind = *(reinterpret_cast<int*>(p->pdata + free_ind));
+				}
+
+				for (int i = 0; i < m_blkSize; ++i) {
+					if (is_taken[i]) {
+						std::cout << is_taken[i] << " ";
+						(p->pdata + i)->~T();
+					}
+				}
+			char* char_array = reinterpret_cast<char*>(p->pdata);
 			delete[] char_array;
 			delete p;
 		}
@@ -209,10 +206,10 @@ namespace lab618 {
 		// Начало списка блоков
 		block* m_pBlocks = nullptr;
 		// Текущий блок
-		block *m_pCurrentBlk = nullptr;
+		block* m_pCurrentBlk = nullptr;
 		// Удалять ли элементы при освобождении
 		bool m_isDeleteElementsOnDestruct = false;
 	};
-}; 
+};
 
 #endif
