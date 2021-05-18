@@ -6,13 +6,13 @@ namespace lab618 {
 	class CMemoryManager {
 	private:
 		struct block {
-			// Массив данных блока
+			// ГЊГ Г±Г±ГЁГў Г¤Г Г­Г­Г»Гµ ГЎГ«Г®ГЄГ 
 			T* pdata = nullptr;
-			// Адрес следующего блока
+			// ГЂГ¤Г°ГҐГ± Г±Г«ГҐГ¤ГіГѕГ№ГҐГЈГ® ГЎГ«Г®ГЄГ 
 			block *pnext = nullptr;
-			// Первая свободная ячейка
+			// ГЏГҐГ°ГўГ Гї Г±ГўГ®ГЎГ®Г¤Г­Г Гї ГїГ·ГҐГ©ГЄГ 
 			int firstFreeIndex = 0;
-			// Число заполненных ячеек
+			// Г—ГЁГ±Г«Г® Г§Г ГЇГ®Г«Г­ГҐГ­Г­Г»Гµ ГїГ·ГҐГҐГЄ
 			int usedCount = 0;
 
 			block() = default;
@@ -43,7 +43,7 @@ namespace lab618 {
 			clear();
 		}
 
-		// Получить адрес нового элемента из менеджера
+		// ГЏГ®Г«ГіГ·ГЁГІГј Г Г¤Г°ГҐГ± Г­Г®ГўГ®ГЈГ® ГЅГ«ГҐГ¬ГҐГ­ГІГ  ГЁГ§ Г¬ГҐГ­ГҐГ¤Г¦ГҐГ°Г 
 		T* newObject() {
 			if (nullptr == m_pCurrentBlk) {
 				m_pBlocks = m_pCurrentBlk = newBlock();
@@ -78,7 +78,7 @@ namespace lab618 {
 
 		}
 
-		// Освободить элемент в менеджере
+		// ГЋГ±ГўГ®ГЎГ®Г¤ГЁГІГј ГЅГ«ГҐГ¬ГҐГ­ГІ Гў Г¬ГҐГ­ГҐГ¤Г¦ГҐГ°ГҐ
 		bool deleteObject(T* p) {
 			if (nullptr == m_pBlocks) {
 				return false;
@@ -103,7 +103,7 @@ namespace lab618 {
 			return true;
 		}
 
-		// Очистка данных, зависит от m_isDeleteElementsOnDestruct
+		// ГЋГ·ГЁГ±ГІГЄГ  Г¤Г Г­Г­Г»Гµ, Г§Г ГўГЁГ±ГЁГІ Г®ГІ m_isDeleteElementsOnDestruct
 		void clear() {
 			if (nullptr == m_pBlocks) {
 				return;
@@ -156,7 +156,7 @@ namespace lab618 {
 			return true;
 		}
 
-		// Создать новый блок данных. применяется в newObject
+		// Г‘Г®Г§Г¤Г ГІГј Г­Г®ГўГ»Г© ГЎГ«Г®ГЄ Г¤Г Г­Г­Г»Гµ. ГЇГ°ГЁГ¬ГҐГ­ГїГҐГІГ±Гї Гў newObject
 		block* newBlock() {
 			int num_of_chars = m_blkSize * T_size;
 			char* char_array = new char[num_of_chars];
@@ -177,7 +177,7 @@ namespace lab618 {
 			return new_block;
 		}
 
-		// Освободить память блока данных. Применяется в clear
+		// ГЋГ±ГўГ®ГЎГ®Г¤ГЁГІГј ГЇГ Г¬ГїГІГј ГЎГ«Г®ГЄГ  Г¤Г Г­Г­Г»Гµ. ГЏГ°ГЁГ¬ГҐГ­ГїГҐГІГ±Гї Гў clear
 		void deleteBlock(block *p, bool *is_taken) {
 			for (int i = 0; i < m_blkSize; ++i) {
 					is_taken[i] = true;
@@ -191,7 +191,6 @@ namespace lab618 {
 
 				for (int i = 0; i < m_blkSize; ++i) {
 					if (is_taken[i]) {
-						std::cout << is_taken[i] << " ";
 						(p->pdata + i)->~T();
 					}
 				}
@@ -201,13 +200,13 @@ namespace lab618 {
 		}
 
 		int T_size = sizeof(T);
-		// Размер блока
+		// ГђГ Г§Г¬ГҐГ° ГЎГ«Г®ГЄГ 
 		int m_blkSize = 0;
-		// Начало списка блоков
+		// ГЌГ Г·Г Г«Г® Г±ГЇГЁГ±ГЄГ  ГЎГ«Г®ГЄГ®Гў
 		block* m_pBlocks = nullptr;
-		// Текущий блок
+		// Г’ГҐГЄГіГ№ГЁГ© ГЎГ«Г®ГЄ
 		block* m_pCurrentBlk = nullptr;
-		// Удалять ли элементы при освобождении
+		// Г“Г¤Г Г«ГїГІГј Г«ГЁ ГЅГ«ГҐГ¬ГҐГ­ГІГ» ГЇГ°ГЁ Г®Г±ГўГ®ГЎГ®Г¦Г¤ГҐГ­ГЁГЁ
 		bool m_isDeleteElementsOnDestruct = false;
 	};
 };
