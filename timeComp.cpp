@@ -262,7 +262,7 @@ int main() {
 		delete[] array_of_pointers_2;
 	}
 
-	int num_of_points = (max - min) / shift;
+	int num_of_points = (max - min) / shift + 1;
 
 	std::ofstream out;
 	out.open("sort.txt", std::fstream::out);
