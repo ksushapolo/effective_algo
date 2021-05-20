@@ -28,7 +28,7 @@ struct TestStruct {
 
 
 static std::string makeRandomString(int minL = 7, int maxL = 20) {
-	const char alphabet[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";//ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿ";
+	const char alphabet[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";//Ã€ÃÃ‚ÃƒÃ„Ã…Â¨Ã†Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃÃÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã—Ã˜Ã™ÃšÃ›ÃœÃÃÃŸÃ Ã¡Ã¢Ã£Ã¤Ã¥Â¸Ã¦Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã°Ã±Ã²Ã³Ã´ÃµÃ¶Ã·Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¾Ã¿";
 	const int alphabet_length = sizeof(alphabet);
 	int length = rand() % maxL + minL;
 	std::string s;
@@ -183,7 +183,6 @@ void timerRemove(CHash& hash, CAVL& tree, TestStruct* array_of_elements, const s
 
 
 int main() {
-	setlocale(LC_ALL, "Russian");
 	const int BLOCK_SIZE = 10;
 	std::vector<double> sort_time;
 	std::vector<double> add_hash_time;
