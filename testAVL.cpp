@@ -55,9 +55,8 @@ static void generate(TestStruct *pts) {
 }
 
 void TestAVLFunction() {
-	const int BLOCK_SIZE = 10;
 	TestStruct* my_array = new TestStruct[ELEMENTS_COUNT];
-	CAVL tree(BLOCK_SIZE);
+	CAVL tree;
 
 	for (int i = 0; i < ELEMENTS_COUNT; ++i) {
 		generate(&my_array[i]);

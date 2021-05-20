@@ -6,6 +6,8 @@
 
 namespace lab618
 {
+	const int BLOCK_SIZE = 10;
+
 	template <class T, int(*Compare)(const T *pElement, const T* pElement2) >
 	class CAVLTree {
 	private:
@@ -26,7 +28,8 @@ namespace lab618
 		};
 
 	public:
-		CAVLTree(int defaultBlockSize) : m_pRoot(nullptr), m_Memory(CMemoryManager<leaf>(defaultBlockSize, true)) {}
+
+		CAVLTree() : m_pRoot(nullptr), m_Memory(CMemoryManager<leaf>(BLOCK_SIZE, true)) {}
 
 
 		virtual ~CAVLTree() {
@@ -231,7 +234,7 @@ namespace lab618
 		}
 
 	private:
-		leaf** m_pRoot;
+		leaf** m_pRoot = nullptr;
 		CMemoryManager<leaf> m_Memory;
 	};
 }; // namespace templates
